@@ -10,7 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
-
+import kr.co.testCode.jpa.testtableService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -22,6 +22,8 @@ public class TestCode1647Application implements ApplicationRunner {
 	}
 
 	@Autowired ApplicationContext context;
+	
+	@Autowired testtableService testtableService;
 	
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
@@ -42,7 +44,6 @@ public class TestCode1647Application implements ApplicationRunner {
 		corn.set("콘");
 		log.info(corn.get());
 		
-		
 		Corn<String> corn2 = context.getBean("corn", Corn.class);
 		log.info(corn.get());
 		
@@ -53,6 +54,9 @@ public class TestCode1647Application implements ApplicationRunner {
 		log.info(net.logstash.logback.marker.Markers.append("myCustomField", 
 				net.logstash.logback.marker.Markers.append("myCustomField2", "2")
 				), "add key to log json");
+		
+		
+		testtableService.findAll().forEach(e-> log.info("Name is {} , Phone is {}",e.getName() , e.getPhone()));
 		
 	}
 

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- 스프링 프로파일에 따른 로깅 레벨 설정 
+    <springProfile name="dev">
+        <logger name="org.springframework" level="DEBUG" />
+    </springProfile>
+
+    <springProfile name="prod">
+        <logger name="org.springframework" level="INFO" />
+    </springProfile>
+-->
+
+    <!-- 콘솔에 로그 출력 -->
+<![CDATA[   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 파일에 로그 기록 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/myapp.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 로그 파일 이름 형식 -->
+            <fileNamePattern>logs/myapp-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 최대 보관 일수 설정 -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 전체 로깅 설정 -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </root>
+]]>
+<!-- JSON 형식으로 콘솔에 로그 출력 -->
+
+    <appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+		   <!--
+		    <customFields>{"appName": "myApp", "env": "prod"}</customFields>
+		    <prettyPrint>true</prettyPrint>
+		    -->
+		    
+		    <customFields>{"appName": "myApp", "env": "prod"}</customFields>
+		    <jsonGeneratorDecorator class="net.logstash.logback.decorate.CompositeJsonGeneratorDecorator">
+    			<decorator class="net.logstash.logback.decorate.PrettyPrintingJsonGeneratorDecorator"/>
+            </jsonGeneratorDecorator>
+            <timestampPattern>yyyy-MM-dd HH:mm:ss.SSS</timestampPattern>
+		    
+		</encoder>
+		
+		<!--
+		<encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+		    <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
+		        <timestampFormat>yyyy-MM-dd' 'HH:mm:ss.SSS</timestampFormat>
+		        <appendLineSeparator>true</appendLineSeparator>
+		        <jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
+		            <prettyPrint>true</prettyPrint>
+		        </jsonFormatter>
+		    </layout>
+		</encoder>
+		-->
+    </appender>
+
+
+<!--
+    <appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+	    <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
+	        <jsonFormatter
+	            class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
+	            <prettyPrint>true</prettyPrint>
+	        </jsonFormatter>
+	        <timestampFormat>yyyy-MM-dd' 'HH:mm:ss.SSS</timestampFormat>
+	    </layout> 
+   </appender>
+-->
+
+    <!-- JSON 형식으로 파일에 로그 기록 -->
+    <appender name="JSON_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/myapp-json.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/myapp-json-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+		 <!--   <customFields>{"appName": "myApp", "env": "prod"}</customFields> -->
+		    <prettyPrint>true</prettyPrint>
+		</encoder>
+    </appender>
+
+    <!-- 전체 로깅 설정 -->
+    <root level="INFO">
+        <appender-ref ref="JSON_CONSOLE" />
+        <appender-ref ref="JSON_FILE" />
+    </root>
+
+</configuration>
